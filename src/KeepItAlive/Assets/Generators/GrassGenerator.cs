@@ -7,11 +7,16 @@ public class GrassGenerator : MonoBehaviour
     [SerializeField]
     private GameObject grassPrefab;
 
+    [SerializeField]
+    private int width;
+    [SerializeField]
+    private int depth;
+
     void Start()
     {
-        for (int x = 0; x < 50; x++)
+        for (int x = width / -2; x < width; x++)
         {
-            for (int z = 0; z < 25; z++)
+            for (int z = depth / -2; z < depth; z++)
             {
                 var grassCube = Instantiate(grassPrefab);
                 grassCube.transform.position = new Vector3(x, 0, z);
