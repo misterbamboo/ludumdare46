@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrassGenerator : MonoBehaviour
+public class MapGenerator : MonoBehaviour
 {
     [SerializeField]
     private GameObject grassPrefab;
