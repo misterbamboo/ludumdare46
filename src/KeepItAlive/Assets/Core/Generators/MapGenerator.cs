@@ -22,7 +22,7 @@ public class MapGenerator : MonoBehaviour
         map = new Map(width, depth);
 
         var grassPathAlgorithm = new GrassPathAlgorithm(map);
-        grassPathAlgorithm.GeneratePath();
+        grassPathAlgorithm.GeneratePath(0, depth);
 
         for (int x = 0; x < width; x++)
         {

@@ -20,11 +20,11 @@ namespace Assets.Core.Generators.Algorithms
 
         private Map Map { get; set; }
 
-        public void GeneratePath()
+        public void GeneratePath(int offset, int maxLenght)
         {
             int size = StartingBoldSize;
             int startingX = Map.Width / Constants.Half;
-            for (int i = 0; i < Map.Depth; i++)
+            for (int i = offset; i < Map.Depth; i++)
             {
                 startingX += Random.Range(Constants.MinusOneInclusive, Constants.PlusOneInclusive);
                 startingX = Mathf.Clamp(startingX, 0, Map.Width);
@@ -41,6 +41,11 @@ namespace Assets.Core.Generators.Algorithms
                 for (int x = beginX; x < endX; x++)
                 {
                     Map.Grid[x][i] = CubeTypes.Grass;
+                }
+
+                if (i >= offset + maxLenght)
+                {
+                    break;
                 }
             }
         }
