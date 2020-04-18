@@ -10,5 +10,11 @@ namespace Assets.Core.Entities
     {
         Empty,
         Grass,
+        Ground,
+        Rock,
+        Iron,
+        Wheat,
+        Tree,
+        Water,
     }
 }

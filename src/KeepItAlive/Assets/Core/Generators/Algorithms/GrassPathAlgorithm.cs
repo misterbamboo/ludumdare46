@@ -20,32 +20,23 @@ namespace Assets.Core.Generators.Algorithms
 
         private Map Map { get; set; }
 
-        public void GeneratePath(int offset, int maxLenght)
+        public void GeneratePath()
         {
             int size = StartingBoldSize;
-            int startingX = Map.Width / Constants.Half;
-            for (int i = offset; i < Map.Depth; i++)
+            int pointerX = Map.Width / Constants.Half;
+            for (int z = 0; z < Map.Depth; z++)
             {
-                startingX += Random.Range(Constants.MinusOneInclusive, Constants.PlusOneInclusive);
-                startingX = Mathf.Clamp(startingX, 0, Map.Width);
+                pointerX += Random.Range(Constants.MinusOneInclusive, Constants.PlusOneInclusive);
+                pointerX = Mathf.Clamp(pointerX, 0, Map.Width);
 
                 size += Random.Range(Constants.MinusOneInclusive, Constants.PlusOneInclusive);
                 size = Mathf.Clamp(size, MinBoldSize, MaxBoldSize);
 
-                int beginX = startingX - size / 2;
+                int beginX = pointerX - size / 2;
                 int endX = beginX + size;
-
-                beginX = Mathf.Clamp(beginX, 0, Map.Width);
-                endX = Mathf.Clamp(endX, 0, Map.Width);
-
                 for (int x = beginX; x < endX; x++)
                 {
-                    Map.Grid[x][i] = CubeTypes.Grass;
-                }
-
-                if (i >= offset + maxLenght)
-                {
-                    break;
+                    Map.PlaceCube(CubeTypes.Grass, x, z);
                 }
             }
         }
