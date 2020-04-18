@@ -540,6 +540,7 @@ GameObject:
   m_Component:
   - component: {fileID: 397860984}
   - component: {fileID: 397860985}
+  - component: {fileID: 397860986}
   m_Layer: 0
   m_Name: OnLoad
   m_TagString: Untagged
@@ -593,6 +594,18 @@ MonoBehaviour:
   waterSpotPercent: 25
   wheatSpotPercent: 20
   treeHeight: 0.38
+--- !u!114 &397860986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397860983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2edd6579c2b25b64fb353abd1af79ccf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &430656784
 PrefabInstance:
   m_ObjectHideFlags: 0
