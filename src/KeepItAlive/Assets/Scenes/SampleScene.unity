@@ -249,8 +249,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grassPrefab: {fileID: 6951410063454463417, guid: e576b1a03df2e1748a1edf72cbb13cfc,
     type: 3}
-  width: 25
-  depth: 100
+  width: 64
+  depth: 255
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
