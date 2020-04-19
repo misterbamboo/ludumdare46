@@ -285,7 +285,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1270362473592630678}
-  - component: {fileID: 6931228446682306679}
+  - component: {fileID: 7312433891535888910}
   m_Layer: 0
   m_Name: Tree1
   m_TagString: Untagged
@@ -311,7 +311,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6931228446682306679
+--- !u!114 &7312433891535888910
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -323,6 +323,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fc852d85d9be09468998c4a714fb225, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightRenderers:
+  - {fileID: 5338831241531510051}
+  - {fileID: 7755427291780206011}
+  - {fileID: 8707346466243679794}
+  - {fileID: 3798270608965137301}
+  flashingSpeed: 1
 --- !u!1 &7622697108452497860
 GameObject:
   m_ObjectHideFlags: 0

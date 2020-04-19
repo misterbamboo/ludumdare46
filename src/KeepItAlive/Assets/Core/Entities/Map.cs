@@ -63,6 +63,11 @@ namespace Assets.Core.Entities
             z = Mathf.Clamp(z, 0, Depth - 1);
             Grid[x][z] = cubeType;
             RessourceQuantity[x][z] = UnityEngine.Random.Range(minQty, maxQty);
+
+            if (GameObjectsGrid[x][z] != null)
+            {
+                UpdateGameObjectAt(x, z);
+            }
         }
 
         public int GetRessourceCount(int x, int z)
