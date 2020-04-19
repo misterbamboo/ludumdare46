@@ -36,7 +36,7 @@ namespace Assets.Core.Services
                 var grassCube = Map.GetGameObject(x, z);
                 var script = grassCube.GetComponent<GrassAndRoadScript>();
                 script.ConvertToRoad();
-                Map.PlaceCube(CubeTypes.Road, x, z);
+                Map.PlaceCube(CubeTypes.Road, x, z, 1, 1);
             }
         }
 

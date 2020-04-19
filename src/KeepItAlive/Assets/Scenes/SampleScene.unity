@@ -712,11 +712,11 @@ MonoBehaviour:
     type: 3}
   width: 30
   depth: 200
-  rockSpotPercent: 20
-  treeSpotPercent: 20
-  grassSpotPercent: 15
-  waterSpotPercent: 25
-  wheatSpotPercent: 20
+  rockSpotPercent: 40
+  treeSpotPercent: 10
+  grassSpotPercent: 10
+  waterSpotPercent: 30
+  wheatSpotPercent: 10
   treeHeight: 0.38
 --- !u!114 &397860986
 MonoBehaviour:

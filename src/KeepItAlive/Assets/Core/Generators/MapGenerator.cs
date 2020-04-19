@@ -35,19 +35,19 @@ public class MapGenerator : MonoBehaviour
     private int depth = 256;
 
     [SerializeField]
-    private int rockSpotPercent = 20;
+    private int rockSpotPercent = 40;
 
     [SerializeField]
-    private int treeSpotPercent = 20;
+    private int treeSpotPercent = 10;
 
     [SerializeField]
-    private int grassSpotPercent = 15;
+    private int grassSpotPercent = 10;
 
     [SerializeField]
-    private int waterSpotPercent = 25;
+    private int waterSpotPercent = 30;
 
     [SerializeField]
-    private int wheatSpotPercent = 20;
+    private int wheatSpotPercent = 10;
 
     [SerializeField]
     private float treeHeight = 0.38f;
@@ -58,19 +58,19 @@ public class MapGenerator : MonoBehaviour
     {
         map = new Map(width, depth);
 
-        GenerateSpots(CubeTypes.Wheat, CubeTypes.Grass, 2, 4, wheatSpotPercent);
-        GenerateSpots(CubeTypes.Water, CubeTypes.Water, 8, 16, waterSpotPercent);
-        GenerateSpots(CubeTypes.Tree, CubeTypes.Grass, 8, 16, treeSpotPercent);
-        GenerateSpots(CubeTypes.Rock, CubeTypes.Ground, 8, 16, rockSpotPercent);
-        GenerateSpots(CubeTypes.Grass, CubeTypes.Empty, 5, 12, grassSpotPercent);
+        GenerateSpots(CubeTypes.Wheat, CubeTypes.Grass, 2, 4, wheatSpotPercent, 10, 10);
+        GenerateSpots(CubeTypes.Rock, CubeTypes.Ground, 3, 20, rockSpotPercent, 150, 200);
+        GenerateSpots(CubeTypes.Water, CubeTypes.Water, 4, 14, waterSpotPercent, 1, 1);
+        GenerateSpots(CubeTypes.Tree, CubeTypes.Grass, 8, 16, treeSpotPercent, 10, 100);
+        GenerateSpots(CubeTypes.Grass, CubeTypes.Empty, 5, 12, grassSpotPercent, 1, 1);
         GeneratePath(king);
-        FillMapEmptySpots(CubeTypes.Tree);
+        FillMapEmptySpots(CubeTypes.Tree, 10, 100);
 
         CreateGameObjects();
         return map;
     }
 
-    private void GenerateSpots(CubeTypes cubeType, CubeTypes paddingType, int minRadius, int maxRadius, int spotPercent)
+    private void GenerateSpots(CubeTypes cubeType, CubeTypes paddingType, int minRadius, int maxRadius, int spotPercent, int minQty, int maxQty)
     {
         var averageRadius = (minRadius + maxRadius) / 2;
         float approxNumberOfSpots = EvaluateApproxNumberOfSpots(averageRadius, spotPercent);
@@ -80,7 +80,7 @@ public class MapGenerator : MonoBehaviour
         spotAlgorithm.SpotMaxRadius = maxRadius;
         for (int i = 0; i < approxNumberOfSpots; i++)
         {
-            spotAlgorithm.GenerateSpot();
+            spotAlgorithm.GenerateSpot(minQty, maxQty);
         }
     }
 
@@ -112,9 +112,9 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void FillMapEmptySpots(CubeTypes cubeType)
+    private void FillMapEmptySpots(CubeTypes cubeType, int minQty, int maxQty)
     {
-        map.FillEmptySpacesWith(cubeType);
+        map.FillEmptySpacesWith(cubeType, minQty, maxQty);
     }
 
     private void CreateGameObjects()

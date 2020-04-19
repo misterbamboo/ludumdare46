@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,10 +17,12 @@ namespace Assets.Core.Entities
             this.Depth = depth;
             Grid = new CubeTypes[width][];
             GameObjectsGrid = new GameObject[width][];
+            RessourceQuantity = new int[width][];
             for (int i = 0; i < width; i++)
             {
                 Grid[i] = new CubeTypes[depth];
                 GameObjectsGrid[i] = new GameObject[depth];
+                RessourceQuantity[i] = new int[depth];
             }
 
             Toons = new List<ToonScript>();
@@ -29,11 +30,13 @@ namespace Assets.Core.Entities
 
         private CubeTypes[][] Grid { get; set; }
 
+        private int[][] RessourceQuantity { get; set; }
+
         private GameObject[][] GameObjectsGrid { get; set; }
 
         private List<ToonScript> Toons { get; set; }
 
-        public void FillEmptySpacesWith(CubeTypes cubeType)
+        public void FillEmptySpacesWith(CubeTypes cubeType, int minQty, int maxQty)
         {
             for (int x = 0; x < Grid.Length; x++)
             {
@@ -42,6 +45,7 @@ namespace Assets.Core.Entities
                     if (Grid[x][z] == CubeTypes.Empty)
                     {
                         Grid[x][z] = cubeType;
+                        RessourceQuantity[x][z] = Random.Range(minQty, maxQty);
                     }
                 }
             }
@@ -52,11 +56,12 @@ namespace Assets.Core.Entities
             return Toons.Where(t => x == (int)t.transform.position.x && z == (int)t.transform.position.z).FirstOrDefault();
         }
 
-        public void PlaceCube(CubeTypes cubeType, int x, int z)
+        public void PlaceCube(CubeTypes cubeType, int x, int z, int minQty, int maxQty)
         {
             x = Mathf.Clamp(x, 0, Width - 1);
             z = Mathf.Clamp(z, 0, Depth - 1);
             Grid[x][z] = cubeType;
+            RessourceQuantity[x][z] = Random.Range(minQty, maxQty);
         }
 
         public CubeTypes GetCubeType(int x, int z)
@@ -81,6 +86,29 @@ namespace Assets.Core.Entities
             z = Mathf.Clamp(z, 0, Depth - 1);
 
             GameObjectsGrid[x][z] = gameObject;
+
+            var cupeType = GetCubeType(x, z);
+            if (cupeType == CubeTypes.Road)
+            {
+                var pos = gameObject.transform.localPosition;
+                pos.y = -0.1f;
+                gameObject.transform.localPosition = pos;
+            }
+            else if (cupeType == CubeTypes.Wheat || cupeType == CubeTypes.Tree || cupeType == CubeTypes.Ground || cupeType == CubeTypes.Grass)
+            {
+                // do nothing for them
+            }
+            else
+            {
+                float quantity = RessourceQuantity[x][z];
+                var scale = gameObject.transform.localScale;
+                scale.y = quantity <= 10 ? 1 : 1 + quantity / 100f;
+                gameObject.transform.localScale = scale;
+
+                var pos = gameObject.transform.localPosition;
+                pos.y = (scale.y - 1) / 2;
+                gameObject.transform.localPosition = pos;
+            }
         }
 
         public GameObject GetGameObject(int x, int z)

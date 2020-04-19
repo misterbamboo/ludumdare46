@@ -40,11 +40,11 @@ namespace Assets.Core.Generators.Algorithms
                 {
                     if (z < 2 && x == (int)StartingPoint.x)
                     {
-                        Map.PlaceCube(CubeTypes.Road, x, z);
+                        Map.PlaceCube(CubeTypes.Road, x, z, 1, 1);
                     }
                     else
                     {
-                        Map.PlaceCube(CubeTypes.Grass, x, z);
+                        Map.PlaceCube(CubeTypes.Grass, x, z, 1, 1);
                     }
                 }
             }

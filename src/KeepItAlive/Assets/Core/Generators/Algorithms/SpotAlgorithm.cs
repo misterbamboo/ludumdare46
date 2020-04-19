@@ -23,7 +23,7 @@ namespace Assets.Core.Generators.Algorithms
         private CubeTypes PaddingType { get; set; }
         private Map Map { get; set; }
 
-        public void GenerateSpot()
+        public void GenerateSpot(int minQty, int maxQty)
         {
             int maxTentatives = 100;
             do
@@ -33,16 +33,16 @@ namespace Assets.Core.Generators.Algorithms
 
                 if (Map.IsCubeType(x, z, CubeTypes.Empty))
                 {
-                    FoundSpotGeneration(x, z);
+                    FoundSpotGeneration(x, z, minQty, maxQty);
                     break;
                 }
             } while (maxTentatives-- > 0);
         }
 
-        private void FoundSpotGeneration(int x, int z)
+        private void FoundSpotGeneration(int x, int z, int minQty, int maxQty)
         {
             var radius = Random.Range(SpotMinRadius, SpotMaxRadius);
-            Map.PlaceCube(SpotType, x, z);
+            Map.PlaceCube(SpotType, x, z, minQty, maxQty);
 
             // Make a 360 around this spot to fill cubes
             for (int a = 0; a < 360; a++)
@@ -63,8 +63,19 @@ namespace Assets.Core.Generators.Algorithms
                         {
                             cubeType = PaddingType;
                         }
-                        
-                        Map.PlaceCube(cubeType, calculatedX, calculatedZ);
+
+                        float perc = r;
+                        perc = 1f / perc;
+                        if (r == 1)
+                        {
+                            perc = 0.5f;
+                        }
+                        perc += Random.Range(0.2f, 0.5f);
+
+                        int adjustedMinQty = (int)(minQty * perc);
+                        int adjustedMaxQty = (int)(maxQty * perc);
+
+                        Map.PlaceCube(cubeType, calculatedX, calculatedZ, adjustedMinQty, adjustedMaxQty);
                     }
                 }
             }
