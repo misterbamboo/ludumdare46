@@ -16,7 +16,14 @@ public class SelectableEntity : MonoBehaviour
     private float flashingPointer = 0;
     private float flashingSpeed = 2;
 
+    public IHudService HudService => DependencyInjection.Get<IHudService>();
+
     void Start()
+    {
+        ResetFlashingColor();
+    }
+
+    public void ResetFlashingColor()
     {
         if (highlightRenderers == null || highlightRenderers.Length == 0)
         {
@@ -47,6 +54,7 @@ public class SelectableEntity : MonoBehaviour
     void FixedUpdate()
     {
         if (!isHover) return;
+        if (HudService.HudIsOpen()) return;
 
         for (int i = 0; i < highlightRenderers.Length; i++)
         {

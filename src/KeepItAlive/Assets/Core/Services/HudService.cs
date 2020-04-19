@@ -17,17 +17,8 @@ namespace Assets.Core.Services
         [SerializeField]
         private GameObject hudObject;
 
-        [SerializeField]
-        private GameObject gameActionsPannel;
-
-        [SerializeField]
-        private GameObject gameActionsButtonPrefab;
-
-        private GameObject[] gameActionsButtons;
-
         void Start()
         {
-            gameActionsButtons = new GameObject[0];
         }
 
         // Update is called once per frame
@@ -38,24 +29,32 @@ namespace Assets.Core.Services
 
         public void UpdateActions(IEnumerable<GameAction> actions)
         {
-            foreach (var gameActionsButton in gameActionsButtons)
-            {
-                Destroy(gameActionsButton);
-            }
+            var buttons = hudObject.GetComponentsInChildren<Button>();
+            buttons = buttons.OrderBy(b => b.transform.position.y).ToArray();
 
-            gameActionsButtons = new GameObject[actions.Count()];
             int i = 0;
             foreach (var action in actions)
             {
-                gameActionsButtons[i] = Instantiate(gameActionsButtonPrefab, gameActionsPannel.transform);
-                var text = gameActionsButtons[i].GetComponentInChildren<Text>();
+                buttons[i].gameObject.SetActive(false);
+
+                var button = buttons[i];
+                var text = button.GetComponentInChildren<Text>();
                 text.text = action.Text;
 
-                var button = gameActionsButtons[i].GetComponent<Button>();
-                button.onClick.AddListener(() => GameService.ExecuteGameAction(action));
+                var buttonScript = button.GetComponent<GameActionButtonScript>();
+                buttonScript.SetGameAction(action);
+
+                buttons[i].gameObject.SetActive(true);
 
                 i++;
             }
+
+            while (i < buttons.Length)
+            {
+                buttons[i].gameObject.SetActive(false);
+                i++;
+            }
+
         }
 
         public void OpenHud()
@@ -66,6 +65,11 @@ namespace Assets.Core.Services
         public void CloseHud()
         {
             hudObject.SetActive(false);
+        }
+
+        public bool HudIsOpen()
+        {
+            return hudObject.activeSelf;
         }
     }
 }

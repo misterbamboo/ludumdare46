@@ -29,6 +29,7 @@ namespace Assets.Core.Services
 
         public void ExecuteGameAction(GameAction action)
         {
+            Debug.Log(action.Text);
             switch (action.ActionType)
             {
                 case GameActionTypes.ContinueRoad:
@@ -37,11 +38,12 @@ namespace Assets.Core.Services
                 default:
                     break;
             }
+            HudService.CloseHud();
         }
 
         private void ContinueRoad(GameAction action)
         {
-            CubeTypes type = MapService.GetCubeType(action.X, action.Z);
+            MapService.ConvertGrassToRoad(action.X, action.Z);
         }
     }
 }

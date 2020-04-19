@@ -23,6 +23,8 @@ public class GrassAndRoadScript : MonoBehaviour
         {
             renderer = GetComponent<MeshRenderer>();
             renderer.material = isRoad ? roadMaterial : grassMaterial;
+            var selectable = gameObject.GetComponent<SelectableEntity>();
+            selectable.ResetFlashingColor();
         }
     }
 
@@ -40,6 +42,8 @@ public class GrassAndRoadScript : MonoBehaviour
             if (renderer != null)
             {
                 renderer.material = roadMaterial;
+                var selectable = gameObject.GetComponent<SelectableEntity>();
+                selectable.ResetFlashingColor();
             }
         }
     }
@@ -52,6 +56,8 @@ public class GrassAndRoadScript : MonoBehaviour
             if (renderer != null)
             {
                 renderer.material = grassMaterial;
+                var selectable = gameObject.GetComponent<SelectableEntity>();
+                selectable.ResetFlashingColor();
             }
         }
     }

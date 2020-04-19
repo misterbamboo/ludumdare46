@@ -17,13 +17,17 @@ namespace Assets.Core.Entities
             this.Width = width;
             this.Depth = depth;
             Grid = new CubeTypes[width][];
+            GameObjectsGrid = new GameObject[width][];
             for (int i = 0; i < width; i++)
             {
                 Grid[i] = new CubeTypes[depth];
+                GameObjectsGrid[i] = new GameObject[depth];
             }
         }
 
         private CubeTypes[][] Grid { get; set; }
+
+        private GameObject[][] GameObjectsGrid { get; set; }
 
         public void FillEmptySpacesWith(CubeTypes cubeType)
         {
@@ -60,6 +64,22 @@ namespace Assets.Core.Entities
             if (z < 0 || z >= Depth) return false;
 
             return Grid[x][z] == cubeType;
+        }
+
+        public void PlaceGameObject(GameObject gameObject, int x, int z)
+        {
+            x = Mathf.Clamp(x, 0, Width - 1);
+            z = Mathf.Clamp(z, 0, Depth - 1);
+
+            GameObjectsGrid[x][z] = gameObject;
+        }
+
+        public GameObject GetGameObject(int x, int z)
+        {
+            if (x < 0 || x >= Width) return null;
+            if (z < 0 || z >= Depth) return null;
+
+            return GameObjectsGrid[x][z];
         }
     }
 }

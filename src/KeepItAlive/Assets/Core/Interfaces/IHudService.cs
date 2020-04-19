@@ -14,5 +14,7 @@ namespace Assets.Core.Interfaces
         void OpenHud();
 
         void CloseHud();
+
+        bool HudIsOpen();
     }
 }

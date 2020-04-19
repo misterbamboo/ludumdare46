@@ -34,6 +34,8 @@ namespace Assets.Core.Services
 
         private void UpdateMouseClick()
         {
+            if (HudService.HudIsOpen()) return;
+
             var mouseDown = Input.GetMouseButtonDown(0);
             if (mouseDown && !mouseWasDown)
             {
@@ -51,6 +53,7 @@ namespace Assets.Core.Services
             else
             {
                 lastSelectable.Click();
+                lastSelectable = null;
             }
         }
 

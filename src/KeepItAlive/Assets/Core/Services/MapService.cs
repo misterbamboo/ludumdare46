@@ -28,5 +28,16 @@ namespace Assets.Core.Services
         {
             return Map.GetCubeType(x, z);
         }
+
+        public void ConvertGrassToRoad(int x, int z)
+        {
+            if (Map.IsCubeType(x, z, CubeTypes.Grass))
+            {
+                var grassCube = Map.GetGameObject(x, z);
+                var script = grassCube.GetComponent<GrassAndRoadScript>();
+                script.ConvertToRoad();
+                Map.PlaceCube(CubeTypes.Road, x, z);
+            }
+        }
     }
 }

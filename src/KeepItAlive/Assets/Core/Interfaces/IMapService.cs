@@ -10,5 +10,6 @@ namespace Assets.Core.Interfaces
     public interface IMapService : IService
     {
         CubeTypes GetCubeType(int x, int z);
+        void ConvertGrassToRoad(int x, int z);
     }
 }

@@ -171,6 +171,8 @@ public class MapGenerator : MonoBehaviour
             var gameObject = Instantiate(fieldPrefab);
             gameObject.transform.position = new Vector3(x, 0, z);
             ApplyGrassAndRoadScript(cubeType, gameObject);
+
+            map.PlaceGameObject(gameObject, x, z);
         }
 
         if (overFieldPrefab != null)
