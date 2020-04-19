@@ -51,37 +51,20 @@ public class MapGenerator : MonoBehaviour
 
     private Map map;
 
-    void Start()
+    public Map GenerateMap()
     {
-        try
-        {
-            map = new Map(width, depth);
+        map = new Map(width, depth);
 
-            GenerateSpots(CubeTypes.Wheat, CubeTypes.Grass, 2, 4, wheatSpotPercent);
-            GenerateSpots(CubeTypes.Water, CubeTypes.Water, 8, 16, waterSpotPercent);
-            GenerateSpots(CubeTypes.Tree, CubeTypes.Grass, 8, 16, treeSpotPercent);
-            GenerateSpots(CubeTypes.Rock, CubeTypes.Ground, 8, 16, rockSpotPercent);
-            GenerateSpots(CubeTypes.Grass, CubeTypes.Empty, 5, 12, grassSpotPercent);
-            GeneratePath();
-            FillMapEmptySpots(CubeTypes.Tree);
+        GenerateSpots(CubeTypes.Wheat, CubeTypes.Grass, 2, 4, wheatSpotPercent);
+        GenerateSpots(CubeTypes.Water, CubeTypes.Water, 8, 16, waterSpotPercent);
+        GenerateSpots(CubeTypes.Tree, CubeTypes.Grass, 8, 16, treeSpotPercent);
+        GenerateSpots(CubeTypes.Rock, CubeTypes.Ground, 8, 16, rockSpotPercent);
+        GenerateSpots(CubeTypes.Grass, CubeTypes.Empty, 5, 12, grassSpotPercent);
+        GeneratePath();
+        FillMapEmptySpots(CubeTypes.Tree);
 
-            CreateGameObjects();
-        }
-        catch (System.Exception ex)
-        {
-
-        }
-    }
-
-    void Update()
-    {
-
-    }
-
-    private void GeneratePath()
-    {
-        var grassPathAlgorithm = new GrassPathAlgorithm(map);
-        grassPathAlgorithm.GeneratePath();
+        CreateGameObjects();
+        return map;
     }
 
     private void GenerateSpots(CubeTypes cubeType, CubeTypes paddingType, int minRadius, int maxRadius, int spotPercent)
@@ -105,6 +88,12 @@ public class MapGenerator : MonoBehaviour
         var totalAllowedBlocs = totalBlocs * spotPercent / 100;
         var approxNumberOfSpots = totalAllowedBlocs / circleSurface;
         return (int)approxNumberOfSpots;
+    }
+
+    private void GeneratePath()
+    {
+        var grassPathAlgorithm = new GrassPathAlgorithm(map);
+        grassPathAlgorithm.GeneratePath();
     }
 
     private void FillMapEmptySpots(CubeTypes cubeType)
