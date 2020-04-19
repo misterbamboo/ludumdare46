@@ -15,21 +15,34 @@ namespace Assets.Core.Services
         private IGameService GameService => DependencyInjection.Get<IGameService>();
 
         [SerializeField]
+        private GameObject menuObject;
+
+        [SerializeField]
         private GameObject hudObject;
+
+        [SerializeField]
+        private Text rockTextObject;
+
+        [SerializeField]
+        private Text wheatTextObject;
+
+        [SerializeField]
+        private Text treeTextObject;
 
         void Start()
         {
         }
 
-        // Update is called once per frame
         void Update()
         {
-
+            rockTextObject.text = GameService.RockCount.ToString();
+            wheatTextObject.text = GameService.WheatCount.ToString();
+            treeTextObject.text = GameService.TreeCount.ToString();
         }
 
-        public void UpdateActions(IEnumerable<GameAction> actions)
+        public void UpdateMenuActions(IEnumerable<GameAction> actions)
         {
-            var buttons = hudObject.GetComponentsInChildren<Button>();
+            var buttons = menuObject.GetComponentsInChildren<Button>();
             buttons = buttons.OrderBy(b => b.transform.position.y).ToArray();
 
             int i = 0;
@@ -57,19 +70,19 @@ namespace Assets.Core.Services
 
         }
 
-        public void OpenHud()
+        public void OpenMenu()
         {
-            hudObject.SetActive(true);
+            menuObject.SetActive(true);
         }
 
-        public void CloseHud()
+        public void CloseMenu()
         {
-            hudObject.SetActive(false);
+            menuObject.SetActive(false);
         }
 
-        public bool HudIsOpen()
+        public bool MenuIsOpen()
         {
-            return hudObject.activeSelf;
+            return menuObject.activeSelf;
         }
     }
 }

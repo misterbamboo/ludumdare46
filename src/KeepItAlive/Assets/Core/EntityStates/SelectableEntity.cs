@@ -67,7 +67,7 @@ public class SelectableEntity : MonoBehaviour
             return;
         }
 
-        if (HudService.HudIsOpen() && !forceFlashing) return;
+        if (HudService.MenuIsOpen() && !forceFlashing) return;
 
         if (toon == null && !GameService.HasSelectedToon()) return;
 

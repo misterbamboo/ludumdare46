@@ -9,6 +9,10 @@ namespace Assets.Core.Interfaces
 {
     public interface IGameService : IService
     {
+        int RockCount { get; }
+        int WheatCount { get; }
+        int TreeCount { get; }
+
         void SelectPosition(int x, int z);
 
         void ExecuteGameAction(GameAction action);

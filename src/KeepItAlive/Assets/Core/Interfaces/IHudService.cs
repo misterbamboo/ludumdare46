@@ -9,12 +9,12 @@ namespace Assets.Core.Interfaces
 {
     public interface IHudService : IService
     {
-        void UpdateActions(IEnumerable<GameAction> actions);
+        void UpdateMenuActions(IEnumerable<GameAction> actions);
 
-        void OpenHud();
+        void OpenMenu();
 
-        void CloseHud();
+        void CloseMenu();
 
-        bool HudIsOpen();
+        bool MenuIsOpen();
     }
 }

@@ -34,7 +34,7 @@ namespace Assets.Core.Services
 
         private void UpdateMouseClick()
         {
-            if (HudService.HudIsOpen()) return;
+            if (HudService.MenuIsOpen()) return;
 
             var mouseDown = Input.GetMouseButtonDown(0);
             if (mouseDown && !mouseWasDown)
@@ -48,7 +48,7 @@ namespace Assets.Core.Services
         {
             if (lastSelectable == null)
             {
-                HudService.CloseHud();
+                HudService.CloseMenu();
             }
             else
             {

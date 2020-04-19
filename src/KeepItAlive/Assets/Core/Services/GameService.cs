@@ -21,6 +21,12 @@ namespace Assets.Core.Services
 
         private ToonScript SelectedToon { get; set; }
 
+        public int RockCount { get; set; } = 10;
+
+        public int WheatCount { get; set; } = 10;
+
+        public int TreeCount { get; set; } = 10;
+
         public void SelectPosition(int x, int z)
         {
             if (MapService.HasToonAt(x, z))
@@ -34,8 +40,8 @@ namespace Assets.Core.Services
 
                 if (actions.Any())
                 {
-                    HudService.UpdateActions(actions);
-                    HudService.OpenHud();
+                    HudService.UpdateMenuActions(actions);
+                    HudService.OpenMenu();
                 }
             }
         }
@@ -54,7 +60,7 @@ namespace Assets.Core.Services
                 default:
                     break;
             }
-            HudService.CloseHud();
+            HudService.CloseMenu();
         }
 
         private void ScheduleMovementForToon(ToonScript toon, GameAction action)
