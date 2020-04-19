@@ -23,8 +23,11 @@ namespace Assets.Core.Services
             CubeTypes type = MapService.GetCubeType(x, z);
             var actions = ActionService.GetActionsForCube(type, x, z);
 
-            HudService.UpdateActions(actions);
-            HudService.OpenHud();
+            if (actions.Any())
+            {
+                HudService.UpdateActions(actions);
+                HudService.OpenHud();
+            }
         }
 
         public void ExecuteGameAction(GameAction action)
