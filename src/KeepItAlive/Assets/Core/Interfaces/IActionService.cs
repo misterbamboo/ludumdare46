@@ -9,6 +9,6 @@ namespace Assets.Core.Interfaces
 {
     public interface IActionService : IService
     {
-        IEnumerable<GameAction> GetActionsForCube(CubeTypes type);
+        IEnumerable<GameAction> GetActionsForCube(CubeTypes type, int x, int z);
     }
 }

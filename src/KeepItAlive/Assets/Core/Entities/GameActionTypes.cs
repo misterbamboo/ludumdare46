@@ -6,16 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assets.Core.Entities
 {
-    public enum CubeTypes
+    public enum GameActionTypes
     {
-        Empty,
-        Grass,
-        Ground,
-        Rock,
-        Iron,
-        Wheat,
-        Tree,
-        Water,
-        Road,
+        ContinueRoad,
     }
 }

@@ -21,10 +21,27 @@ namespace Assets.Core.Services
         public void SelectPosition(int x, int z)
         {
             CubeTypes type = MapService.GetCubeType(x, z);
-            var actions = ActionService.GetActionsForCube(type);
+            var actions = ActionService.GetActionsForCube(type, x, z);
 
             HudService.UpdateActions(actions);
             HudService.OpenHud();
+        }
+
+        public void ExecuteGameAction(GameAction action)
+        {
+            switch (action.ActionType)
+            {
+                case GameActionTypes.ContinueRoad:
+                    ContinueRoad(action);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ContinueRoad(GameAction action)
+        {
+            CubeTypes type = MapService.GetCubeType(action.X, action.Z);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Assets.Core.Generators.Algorithms
 {
     public class GrassPathAlgorithm
     {
-        public int StartingBoldSize { get; set; } = 3;
+        public int StartingBoldSize { get; set; } = 6;
         public int MaxBoldSize { get; set; } = 8;
         public int MinBoldSize { get; set; } = 2;
 
@@ -19,11 +19,13 @@ namespace Assets.Core.Generators.Algorithms
         }
 
         private Map Map { get; set; }
+        public Vector3 StartingPoint { get; private set; }
 
         public void GeneratePath()
         {
             int size = StartingBoldSize;
             int pointerX = Map.Width / Constants.Half;
+            StartingPoint = new Vector3(pointerX, 1, 0);
             for (int z = 0; z < Map.Depth; z++)
             {
                 pointerX += Random.Range(Constants.MinusOneInclusive, Constants.PlusOneInclusive);
@@ -36,7 +38,14 @@ namespace Assets.Core.Generators.Algorithms
                 int endX = beginX + size;
                 for (int x = beginX; x < endX; x++)
                 {
-                    Map.PlaceCube(CubeTypes.Grass, x, z);
+                    if (z < 2 && x == (int)StartingPoint.x)
+                    {
+                        Map.PlaceCube(CubeTypes.Road, x, z);
+                    }
+                    else
+                    {
+                        Map.PlaceCube(CubeTypes.Grass, x, z);
+                    }
                 }
             }
         }

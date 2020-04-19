@@ -51,7 +51,7 @@ public class MapGenerator : MonoBehaviour
 
     private Map map;
 
-    public Map GenerateMap()
+    public Map GenerateMap(GameObject king)
     {
         map = new Map(width, depth);
 
@@ -60,7 +60,7 @@ public class MapGenerator : MonoBehaviour
         GenerateSpots(CubeTypes.Tree, CubeTypes.Grass, 8, 16, treeSpotPercent);
         GenerateSpots(CubeTypes.Rock, CubeTypes.Ground, 8, 16, rockSpotPercent);
         GenerateSpots(CubeTypes.Grass, CubeTypes.Empty, 5, 12, grassSpotPercent);
-        GeneratePath();
+        GeneratePath(king);
         FillMapEmptySpots(CubeTypes.Tree);
 
         CreateGameObjects();
@@ -90,10 +90,13 @@ public class MapGenerator : MonoBehaviour
         return (int)approxNumberOfSpots;
     }
 
-    private void GeneratePath()
+    private void GeneratePath(GameObject king)
     {
         var grassPathAlgorithm = new GrassPathAlgorithm(map);
         grassPathAlgorithm.GeneratePath();
+
+        king.transform.position = grassPathAlgorithm.StartingPoint;
+        Camera.main.transform.position = grassPathAlgorithm.StartingPoint;
     }
 
     private void FillMapEmptySpots(CubeTypes cubeType)
@@ -156,6 +159,9 @@ public class MapGenerator : MonoBehaviour
             case CubeTypes.Water:
                 fieldPrefab = waterPrefab;
                 break;
+            case CubeTypes.Road:
+                fieldPrefab = grassPrefab;
+                break;
             default:
                 break;
         }
@@ -164,6 +170,7 @@ public class MapGenerator : MonoBehaviour
         {
             var gameObject = Instantiate(fieldPrefab);
             gameObject.transform.position = new Vector3(x, 0, z);
+            ApplyGrassAndRoadScript(cubeType, gameObject);
         }
 
         if (overFieldPrefab != null)
@@ -172,6 +179,24 @@ public class MapGenerator : MonoBehaviour
             gameObject.transform.position = new Vector3(x, overFieldHeight, z);
             gameObject.transform.rotation = Quaternion.Euler(xTilt, yRotation, zTilt);
             gameObject.transform.localScale = new Vector3(scale, scale, scale);
+        }
+    }
+
+    private void ApplyGrassAndRoadScript(CubeTypes cubeType, GameObject gameObject)
+    {
+        var grassAndRoadScript = gameObject.GetComponent<GrassAndRoadScript>();
+        if (grassAndRoadScript == null) return;
+
+        switch (cubeType)
+        {
+            case CubeTypes.Grass:
+                grassAndRoadScript.ConvertGrass();
+                break;
+            case CubeTypes.Road:
+                grassAndRoadScript.ConvertToRoad();
+                break;
+            default:
+                break;
         }
     }
 }

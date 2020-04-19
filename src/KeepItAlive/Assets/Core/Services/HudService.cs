@@ -1,4 +1,5 @@
-﻿using Assets.Core.Entities;
+﻿using Assets.Core.DI;
+using Assets.Core.Entities;
 using Assets.Core.Interfaces;
 using System;
 using System.Collections;
@@ -11,6 +12,8 @@ namespace Assets.Core.Services
 {
     public class HudService : MonoBehaviour, IHudService
     {
+        private IGameService GameService => DependencyInjection.Get<IGameService>();
+
         [SerializeField]
         private GameObject hudObject;
 
@@ -47,6 +50,9 @@ namespace Assets.Core.Services
                 gameActionsButtons[i] = Instantiate(gameActionsButtonPrefab, gameActionsPannel.transform);
                 var text = gameActionsButtons[i].GetComponentInChildren<Text>();
                 text.text = action.Text;
+
+                var button = gameActionsButtons[i].GetComponent<Button>();
+                button.onClick.AddListener(() => GameService.ExecuteGameAction(action));
 
                 i++;
             }

@@ -14,11 +14,14 @@ namespace Assets.Core.Services
         [SerializeField]
         private MapGenerator mapGenerator;
 
+        [SerializeField]
+        private GameObject kingObject;
+
         private Map Map { get; set; }
 
         void Start()
         {
-            Map = mapGenerator.GenerateMap();
+            Map = mapGenerator.GenerateMap(kingObject);
         }
 
         public CubeTypes GetCubeType(int x, int z)
