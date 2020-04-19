@@ -39,5 +39,16 @@ namespace Assets.Core.Services
                 Map.PlaceCube(CubeTypes.Road, x, z);
             }
         }
+
+        public bool HasToonAt(int x, int z)
+        {
+            var toon = Map.GetToonAt(x, z);
+            return toon != null;
+        }
+
+        public ToonScript GetToonAt(int x, int z)
+        {
+            return Map.GetToonAt(x, z);
+        }
     }
 }

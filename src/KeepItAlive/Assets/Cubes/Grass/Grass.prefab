@@ -107,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightRenderers: []
+  flashingSpeed: 10
 --- !u!114 &5549880239077032788
 MonoBehaviour:
   m_ObjectHideFlags: 0

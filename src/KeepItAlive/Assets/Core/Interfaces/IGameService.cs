@@ -12,5 +12,8 @@ namespace Assets.Core.Interfaces
         void SelectPosition(int x, int z);
 
         void ExecuteGameAction(GameAction action);
+        bool IsToonSelected(ToonScript toonScript);
+
+        bool HasSelectedToon();
     }
 }

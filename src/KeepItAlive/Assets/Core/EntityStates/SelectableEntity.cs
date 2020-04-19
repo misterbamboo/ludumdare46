@@ -12,15 +12,21 @@ public class SelectableEntity : MonoBehaviour
     private Color[] renderersLightColor;
     private bool isHover = false;
 
-    private bool becomesLighter = true;
     private float flashingPointer = 0;
-    private float flashingSpeed = 2;
+
+    [SerializeField]
+    private float flashingSpeed = 1f;
+
+    private ToonScript toon;
 
     public IHudService HudService => DependencyInjection.Get<IHudService>();
+
+    public IGameService GameService => DependencyInjection.Get<IGameService>();
 
     void Start()
     {
         ResetFlashingColor();
+        toon = GetComponent<ToonScript>();
     }
 
     public void ResetFlashingColor()
@@ -53,8 +59,17 @@ public class SelectableEntity : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isHover) return;
-        if (HudService.HudIsOpen()) return;
+        var forceFlashing = ShouldForceFlashing();
+
+        if (!isHover && !forceFlashing)
+        {
+            EnsureWriteColor();
+            return;
+        }
+
+        if (HudService.HudIsOpen() && !forceFlashing) return;
+
+        if (toon == null && !GameService.HasSelectedToon()) return;
 
         for (int i = 0; i < highlightRenderers.Length; i++)
         {
@@ -62,32 +77,31 @@ public class SelectableEntity : MonoBehaviour
             var rendererColor = renderersColor[i];
             var rendererLightColor = renderersLightColor[i];
 
-            if (becomesLighter)
+            flashingPointer += flashingSpeed * Time.deltaTime;
+            if (flashingPointer > 2 * Mathf.PI)
             {
-                flashingPointer += flashingSpeed * Time.deltaTime;
-                if (flashingPointer > 1)
-                {
-                    flashingPointer = 1;
-                    becomesLighter = false;
-                }
-            }
-            else
-            {
-                flashingPointer -= flashingSpeed * Time.deltaTime;
-                if (flashingPointer < 0)
-                {
-                    flashingPointer = 0;
-                    becomesLighter = true;
-                }
+                flashingPointer -= 2 * Mathf.PI;
             }
 
             TranslateColorTo(renderer, rendererColor, rendererLightColor);
         }
     }
 
+    private void EnsureWriteColor()
+    {
+        UnHover();
+    }
+
+    private bool ShouldForceFlashing()
+    {
+        if (toon == null) return false;
+        return toon.IsSelected;
+    }
+
     private void TranslateColorTo(Renderer renderer, Color initColor, Color flashingColor)
     {
-        renderer.material.color = Color.Lerp(initColor, flashingColor, flashingPointer);
+        float value = (Mathf.Sin(flashingPointer) + 1f) / 2f;
+        renderer.material.color = Color.Lerp(initColor, flashingColor, value);
     }
 
     public void Hover()
@@ -104,8 +118,7 @@ public class SelectableEntity : MonoBehaviour
         {
             var renderer = highlightRenderers[i];
             var rendererColor = renderersColor[i];
-            var rendererLightColor = renderersLightColor[i];
-            TranslateColorTo(renderer, rendererColor, rendererLightColor);
+            renderer.material.color = rendererColor;
         }
     }
 

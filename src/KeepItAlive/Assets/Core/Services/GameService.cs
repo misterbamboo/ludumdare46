@@ -18,15 +18,25 @@ namespace Assets.Core.Services
 
         private IHudService HudService { get { return DependencyInjection.Instance.GetService<IHudService>(); } }
 
+        private ToonScript SelectedToon { get; set; }
+
         public void SelectPosition(int x, int z)
         {
-            CubeTypes type = MapService.GetCubeType(x, z);
-            var actions = ActionService.GetActionsForCube(type, x, z);
-
-            if (actions.Any())
+            SelectedToon = null;
+            if (MapService.HasToonAt(x, z))
             {
-                HudService.UpdateActions(actions);
-                HudService.OpenHud();
+                SelectedToon = MapService.GetToonAt(x, z);
+            }
+            else if(SelectedToon != null)
+            {
+                CubeTypes type = MapService.GetCubeType(x, z);
+                var actions = ActionService.GetActionsForCube(type, x, z);
+
+                if (actions.Any())
+                {
+                    HudService.UpdateActions(actions);
+                    HudService.OpenHud();
+                }
             }
         }
 
@@ -47,6 +57,16 @@ namespace Assets.Core.Services
         private void ContinueRoad(GameAction action)
         {
             MapService.ConvertGrassToRoad(action.X, action.Z);
+        }
+
+        public bool IsToonSelected(ToonScript toon)
+        {
+            return SelectedToon == toon;
+        }
+
+        public bool HasSelectedToon()
+        {
+            return SelectedToon != null;
         }
     }
 }

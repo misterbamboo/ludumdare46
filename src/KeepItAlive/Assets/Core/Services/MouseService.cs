@@ -63,6 +63,11 @@ namespace Assets.Core.Services
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 var selectable = hit.transform.GetComponent<SelectableEntity>();
+                if (selectable == null && hit.transform.parent != null)
+                {
+                    selectable = hit.transform.parent.GetComponent<SelectableEntity>();
+                }
+
                 if (selectable != null)
                 {
                     HoverSelection(selectable);

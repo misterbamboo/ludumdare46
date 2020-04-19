@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.Core.Interfaces
 {
@@ -11,5 +12,7 @@ namespace Assets.Core.Interfaces
     {
         CubeTypes GetCubeType(int x, int z);
         void ConvertGrassToRoad(int x, int z);
+        bool HasToonAt(int x, int z);
+        ToonScript GetToonAt(int x, int z);
     }
 }

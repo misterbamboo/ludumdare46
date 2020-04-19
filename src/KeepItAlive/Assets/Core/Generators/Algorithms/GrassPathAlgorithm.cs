@@ -9,7 +9,7 @@ namespace Assets.Core.Generators.Algorithms
 {
     public class GrassPathAlgorithm
     {
-        public int StartingBoldSize { get; set; } = 6;
+        public int StartingBoldSize { get; set; } = 8;
         public int MaxBoldSize { get; set; } = 8;
         public int MinBoldSize { get; set; } = 2;
 

@@ -23,11 +23,15 @@ namespace Assets.Core.Entities
                 Grid[i] = new CubeTypes[depth];
                 GameObjectsGrid[i] = new GameObject[depth];
             }
+
+            Toons = new List<ToonScript>();
         }
 
         private CubeTypes[][] Grid { get; set; }
 
         private GameObject[][] GameObjectsGrid { get; set; }
+
+        private List<ToonScript> Toons { get; set; }
 
         public void FillEmptySpacesWith(CubeTypes cubeType)
         {
@@ -41,6 +45,11 @@ namespace Assets.Core.Entities
                     }
                 }
             }
+        }
+
+        public ToonScript GetToonAt(int x, int z)
+        {
+            return Toons.Where(t => x == (int)t.transform.position.x && z == (int)t.transform.position.z).FirstOrDefault();
         }
 
         public void PlaceCube(CubeTypes cubeType, int x, int z)
@@ -80,6 +89,13 @@ namespace Assets.Core.Entities
             if (z < 0 || z >= Depth) return null;
 
             return GameObjectsGrid[x][z];
+        }
+
+        public void AddToon(ToonScript villager)
+        {
+            if (villager == null) return;
+            if (Toons.Contains(villager)) return;
+            Toons.Add(villager);
         }
     }
 }

@@ -8,6 +8,9 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour
 {
     [SerializeField]
+    private GameObject villagerPrefab;
+
+    [SerializeField]
     private GameObject grassPrefab;
 
     [SerializeField]
@@ -97,6 +100,16 @@ public class MapGenerator : MonoBehaviour
 
         king.transform.position = grassPathAlgorithm.StartingPoint;
         Camera.main.transform.position = grassPathAlgorithm.StartingPoint;
+
+        for (int i = -2; i <= 2; i++)
+        {
+            if (i == 0) continue;
+
+            var villager = Instantiate(villagerPrefab);
+            villager.transform.position = new Vector3(grassPathAlgorithm.StartingPoint.x + i, grassPathAlgorithm.StartingPoint.y, grassPathAlgorithm.StartingPoint.z);
+            var villagerToon = villager.GetComponent<ToonScript>();
+            map.AddToon(villagerToon);
+        }
     }
 
     private void FillMapEmptySpots(CubeTypes cubeType)

@@ -696,6 +696,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1607e7a5f3949b499c3c6c11a941288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  villagerPrefab: {fileID: 7247305610635652991, guid: 1e580990ee895db478cb2b2640913de4,
+    type: 3}
   grassPrefab: {fileID: 6951410063454463417, guid: e576b1a03df2e1748a1edf72cbb13cfc,
     type: 3}
   rockPrefab: {fileID: 9044330281206682669, guid: 6323211140f211c45a7452e153e2e2b9,
@@ -1576,7 +1578,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
