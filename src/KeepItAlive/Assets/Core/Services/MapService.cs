@@ -75,5 +75,10 @@ namespace Assets.Core.Services
         {
             return Map.Width * Map.Depth;
         }
+
+        public int GetRessourceCount(int lifeGoalTargetX, int lifeGoalTargetZ)
+        {
+            return Map.GetRessourceCount(lifeGoalTargetX, lifeGoalTargetZ);
+        }
     }
 }

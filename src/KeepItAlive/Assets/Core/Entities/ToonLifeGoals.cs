@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Core.Entities
 {
-    public enum ToonLiveGoals
+    public enum ToonLifeGoals
     {
         Wait,
         MineRock,

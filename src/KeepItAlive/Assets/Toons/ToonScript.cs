@@ -10,11 +10,14 @@ public class ToonScript : MonoBehaviour
 {
     public IGameService GameService => DependencyInjection.Get<IGameService>();
 
+    public IMapService MapService => DependencyInjection.Get<IMapService>();
+
     public bool IsSelected => GameService.IsToonSelected(this);
 
     private Queue<MovingStep> ScheduledMovingSteps { get; set; }
 
     private Vector3 PreviousPosition { get; set; }
+
     private Vector3 PreviousFacing { get; set; }
 
     private MovingStep CurrentMovingStep { get; set; }
@@ -23,7 +26,13 @@ public class ToonScript : MonoBehaviour
 
     private float Speed { get; set; } = 2;
 
-    private ToonLiveGoals ToonLiveGoal { get; set; }
+    private ToonLifeGoals ToonLifeGoal { get; set; }
+
+    private int LifeGoalTargetX { get; set; }
+
+    private int LifeGoalTargetZ { get; set; }
+
+    private float Progress { get; set; }
 
     void Start()
     {
@@ -34,6 +43,56 @@ public class ToonScript : MonoBehaviour
     {
         ScheduleNextStep();
         Move();
+
+        DoLifeGoal();
+        MoveBody();
+    }
+
+    private void MoveBody()
+    {
+        var angle = transform.localEulerAngles;
+        if (CurrentMovingStep == null)
+        {
+            angle.x = Mathf.Sin(Progress) * 15;
+        }
+        else
+        {
+            angle.x = 0;
+        }
+        transform.localEulerAngles = angle;
+    }
+
+    private void DoLifeGoal()
+    {
+        if (CurrentMovingStep != null) return;
+        switch (ToonLifeGoal)
+        {
+            case ToonLifeGoals.Wait:
+                break;
+            case ToonLifeGoals.MineRock:
+                MineRock();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void MineRock()
+    {
+        var cubeType = MapService.GetCubeType(LifeGoalTargetX, LifeGoalTargetZ);
+        if (cubeType == CubeTypes.Rock)
+        {
+            int count = MapService.GetRessourceCount(LifeGoalTargetX, LifeGoalTargetZ);
+            if (count > 0)
+            {
+                Progress += Time.deltaTime;
+                if (Progress > 1)
+                {
+                    Progress -= 1f;
+                    GameService.RockCount++;
+                }
+            }
+        }
     }
 
     private void Move()
@@ -60,6 +119,7 @@ public class ToonScript : MonoBehaviour
     {
         if (CurrentMovingStep == null && ScheduledMovingSteps.Count > 0)
         {
+            Progress = 0;
             PreviousFacing = transform.forward;
             PreviousPosition = transform.position;
             CurrentMovingStep = ScheduledMovingSteps.Dequeue();
@@ -76,8 +136,10 @@ public class ToonScript : MonoBehaviour
         }
     }
 
-    public void SetLiveGoal(ToonLiveGoals liveGoal)
+    public void SetLifeGoal(ToonLifeGoals lifeGoal, int x, int z)
     {
-        ToonLiveGoal = liveGoal;
+        ToonLifeGoal = lifeGoal;
+        LifeGoalTargetX = x;
+        LifeGoalTargetZ = z;
     }
 }

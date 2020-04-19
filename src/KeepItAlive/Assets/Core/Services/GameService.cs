@@ -113,12 +113,12 @@ namespace Assets.Core.Services
             if (allPaths.Any())
             {
                 var shortestPath = allPaths.OrderBy(p => p.Count()).First();
-                toon.SetLiveGoal(ToonLiveGoals.MineRock);
+                toon.SetLifeGoal(ToonLifeGoals.MineRock, action.X, action.Z);
                 toon.ScheduleMovingSteps(shortestPath);
             }
             else
             {
-                toon.SetLiveGoal(ToonLiveGoals.Wait);
+                toon.SetLifeGoal(ToonLifeGoals.Wait, startX, startZ);
             }
         }
 

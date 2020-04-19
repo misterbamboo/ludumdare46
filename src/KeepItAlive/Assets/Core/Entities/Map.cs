@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace Assets.Core.Entities
                     if (Grid[x][z] == CubeTypes.Empty)
                     {
                         Grid[x][z] = cubeType;
-                        RessourceQuantity[x][z] = Random.Range(minQty, maxQty);
+                        RessourceQuantity[x][z] = UnityEngine.Random.Range(minQty, maxQty);
                     }
                 }
             }
@@ -61,7 +62,12 @@ namespace Assets.Core.Entities
             x = Mathf.Clamp(x, 0, Width - 1);
             z = Mathf.Clamp(z, 0, Depth - 1);
             Grid[x][z] = cubeType;
-            RessourceQuantity[x][z] = Random.Range(minQty, maxQty);
+            RessourceQuantity[x][z] = UnityEngine.Random.Range(minQty, maxQty);
+        }
+
+        public int GetRessourceCount(int x, int z)
+        {
+            return RessourceQuantity[x][z];
         }
 
         public CubeTypes GetCubeType(int x, int z)

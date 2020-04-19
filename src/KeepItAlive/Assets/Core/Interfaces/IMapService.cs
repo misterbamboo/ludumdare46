@@ -16,5 +16,6 @@ namespace Assets.Core.Interfaces
         ToonScript GetToonAt(int x, int z);
         bool IsBlockedPosition(int startX, int startZ);
         int GetTotalBocks();
+        int GetRessourceCount(int lifeGoalTargetX, int lifeGoalTargetZ);
     }
 }
