@@ -67,7 +67,19 @@ namespace Assets.Core.Entities
 
         public int GetRessourceCount(int x, int z)
         {
+            if (x < 0 || x >= Width) return 0;
+            if (z < 0 || z >= Depth) return 0;
             return RessourceQuantity[x][z];
+        }
+
+        public void RemoveRessource(int x, int z)
+        {
+            if (x < 0 || x >= Width) return;
+            if (z < 0 || z >= Depth) return;
+            if (RessourceQuantity[x][z] <= 0) return;
+
+            RessourceQuantity[x][z]--;
+            UpdateGameObjectAt(x, z);
         }
 
         public CubeTypes GetCubeType(int x, int z)
@@ -92,6 +104,12 @@ namespace Assets.Core.Entities
             z = Mathf.Clamp(z, 0, Depth - 1);
 
             GameObjectsGrid[x][z] = gameObject;
+            UpdateGameObjectAt(x, z);
+        }
+
+        private void UpdateGameObjectAt(int x, int z)
+        {
+            GameObject gameObject = GameObjectsGrid[x][z];
 
             var cupeType = GetCubeType(x, z);
             if (cupeType == CubeTypes.Road)

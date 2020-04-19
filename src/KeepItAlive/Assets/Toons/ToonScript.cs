@@ -34,6 +34,8 @@ public class ToonScript : MonoBehaviour
 
     private float Progress { get; set; }
 
+    private float MiningRockSpeed { get; set; } = 2;
+
     void Start()
     {
         ScheduledMovingSteps = new Queue<MovingStep>();
@@ -53,7 +55,7 @@ public class ToonScript : MonoBehaviour
         var angle = transform.localEulerAngles;
         if (CurrentMovingStep == null)
         {
-            angle.x = Mathf.Sin(Progress) * 15;
+            angle.x = Mathf.Sin(Progress) * 16 - 8;
         }
         else
         {
@@ -71,10 +73,22 @@ public class ToonScript : MonoBehaviour
                 break;
             case ToonLifeGoals.MineRock:
                 MineRock();
+                LootAtLifeGoal();
                 break;
             default:
                 break;
         }
+    }
+
+    private void LootAtLifeGoal()
+    {
+        Vector3 target;
+        target.y = transform.position.y;
+        target.x = LifeGoalTargetX;
+        target.z = LifeGoalTargetZ;
+
+        var direction = transform.position - target;
+        transform.forward = direction;
     }
 
     private void MineRock()
@@ -85,10 +99,11 @@ public class ToonScript : MonoBehaviour
             int count = MapService.GetRessourceCount(LifeGoalTargetX, LifeGoalTargetZ);
             if (count > 0)
             {
-                Progress += Time.deltaTime;
+                Progress += Time.deltaTime * MiningRockSpeed;
                 if (Progress > 1)
                 {
                     Progress -= 1f;
+                    MapService.RemoveRessource(LifeGoalTargetX, LifeGoalTargetZ);
                     GameService.RockCount++;
                 }
             }

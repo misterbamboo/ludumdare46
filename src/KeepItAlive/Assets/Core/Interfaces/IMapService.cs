@@ -14,8 +14,9 @@ namespace Assets.Core.Interfaces
         void ConvertGrassToRoad(int x, int z);
         bool HasToonAt(int x, int z);
         ToonScript GetToonAt(int x, int z);
-        bool IsBlockedPosition(int startX, int startZ);
+        bool IsBlockedPosition(int x, int z);
         int GetTotalBocks();
-        int GetRessourceCount(int lifeGoalTargetX, int lifeGoalTargetZ);
+        int GetRessourceCount(int x, int z);
+        void RemoveRessource(int x, int z);
     }
 }
