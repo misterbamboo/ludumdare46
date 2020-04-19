@@ -57,6 +57,9 @@ namespace Assets.Core.Services
                 case GameActionTypes.MoveThere:
                     ScheduleMovementForToon(SelectedToon, action);
                     break;
+                case GameActionTypes.MineRock:
+                    ScheduleMovementForNeerRockPosition(SelectedToon, action);
+                    break;
                 default:
                     break;
             }
@@ -68,6 +71,55 @@ namespace Assets.Core.Services
             var pathFinding = new AstarPathFinding();
             IEnumerable<MovingStep> movingSteps = pathFinding.FromTo((int)toon.transform.position.x, (int)toon.transform.position.z, action.X, action.Z);
             toon.ScheduleMovingSteps(movingSteps);
+        }
+
+        private void ScheduleMovementForNeerRockPosition(ToonScript toon, GameAction action)
+        {
+            var pathFinding = new AstarPathFinding();
+            int startX = (int)toon.transform.position.x;
+            int startZ = (int)toon.transform.position.z;
+
+            List<IEnumerable<MovingStep>> allPaths = new List<IEnumerable<MovingStep>>();
+            for (int xoff = -1; xoff <= 1; xoff++)
+            {
+                if (xoff == 0) continue;
+                if (MapService.IsBlockedPosition(action.X + xoff, action.Z))
+                {
+                    continue;
+                }
+
+                IEnumerable<MovingStep> movingSteps = pathFinding.FromTo(startX, startZ, action.X + xoff, action.Z);
+                if (movingSteps.Any())
+                {
+                    allPaths.Add(movingSteps);
+                }
+            }
+
+            for (int zoff = -1; zoff <= 1; zoff++)
+            {
+                if (zoff == 0) continue;
+                if (MapService.IsBlockedPosition(action.X, action.Z + zoff))
+                {
+                    continue;
+                }
+
+                IEnumerable<MovingStep> movingSteps = pathFinding.FromTo(startX, startZ, action.X, action.Z + zoff);
+                if (movingSteps.Any())
+                {
+                    allPaths.Add(movingSteps);
+                }
+            }
+
+            if (allPaths.Any())
+            {
+                var shortestPath = allPaths.OrderBy(p => p.Count()).First();
+                toon.SetLiveGoal(ToonLiveGoals.MineRock);
+                toon.ScheduleMovingSteps(shortestPath);
+            }
+            else
+            {
+                toon.SetLiveGoal(ToonLiveGoals.Wait);
+            }
         }
 
         private void ContinueRoad(GameAction action)

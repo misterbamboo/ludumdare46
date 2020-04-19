@@ -48,6 +48,11 @@ namespace Assets.Core.Services
             int i = 0;
             foreach (var action in actions)
             {
+                if (i >= buttons.Length)
+                {
+                    break;
+                }
+
                 buttons[i].gameObject.SetActive(false);
 
                 var button = buttons[i];

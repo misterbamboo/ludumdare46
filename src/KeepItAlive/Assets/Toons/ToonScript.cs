@@ -23,6 +23,8 @@ public class ToonScript : MonoBehaviour
 
     private float Speed { get; set; } = 2;
 
+    private ToonLiveGoals ToonLiveGoal { get; set; }
+
     void Start()
     {
         ScheduledMovingSteps = new Queue<MovingStep>();
@@ -72,5 +74,10 @@ public class ToonScript : MonoBehaviour
         {
             ScheduledMovingSteps.Enqueue(movingStep);
         }
+    }
+
+    public void SetLiveGoal(ToonLiveGoals liveGoal)
+    {
+        ToonLiveGoal = liveGoal;
     }
 }
