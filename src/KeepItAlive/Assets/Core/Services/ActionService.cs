@@ -22,9 +22,9 @@ namespace Assets.Core.Services
                 case CubeTypes.Grass:
                     return GrassActions(x, z);
                 case CubeTypes.Ground:
-                    break;
+                    return GroundActions(x, z);
                 case CubeTypes.Rock:
-                    break;
+                    return GetRockActions(x, z);
                 case CubeTypes.Iron:
                     break;
                 case CubeTypes.Wheat:
@@ -37,6 +37,25 @@ namespace Assets.Core.Services
                     break;
             }
             return Enumerable.Empty<GameAction>();
+        }
+
+        private IEnumerable<GameAction> GetRockActions(int x, int z)
+        {
+            List<GameAction> actions = new List<GameAction>();
+
+            if (HasAdjacentFreeToPass(x, z))
+            {
+                actions.Add(new GameAction()
+                {
+                    Text = "Mine rock",
+                    ActionType = GameActionTypes.MineRock,
+                    X = x,
+                    Z = z,
+                });
+            }
+
+            AddCancelAction(actions);
+            return actions;
         }
 
         private IEnumerable<GameAction> GrassActions(int x, int z)
@@ -54,7 +73,7 @@ namespace Assets.Core.Services
                 });
             }
 
-            actions.Add(new GameAction() 
+            actions.Add(new GameAction()
             {
                 Text = "Move there",
                 ActionType = GameActionTypes.MoveThere,
@@ -62,7 +81,32 @@ namespace Assets.Core.Services
                 Z = z,
             });
 
+            AddCancelAction(actions);
             return actions;
+        }
+
+        private IEnumerable<GameAction> GroundActions(int x, int z)
+        {
+            List<GameAction> actions = new List<GameAction>();
+            actions.Add(new GameAction()
+            {
+                Text = "Move there",
+                ActionType = GameActionTypes.MoveThere,
+                X = x,
+                Z = z,
+            });
+
+            AddCancelAction(actions);
+            return actions;
+        }
+
+        private void AddCancelAction(List<GameAction> actions)
+        {
+            actions.Add(new GameAction()
+            {
+                Text = "Cancel",
+                ActionType = GameActionTypes.Cancel,
+            });
         }
 
         private bool HasAdjacentRoadCube(int x, int z)
@@ -71,6 +115,19 @@ namespace Assets.Core.Services
             if (MapService.GetCubeType(x + 1, z) == CubeTypes.Road) return true;
             if (MapService.GetCubeType(x, z - 1) == CubeTypes.Road) return true;
             if (MapService.GetCubeType(x, z + 1) == CubeTypes.Road) return true;
+            return false;
+        }
+
+        private bool HasAdjacentFreeToPass(int x, int z)
+        {
+            for (int xoff = -1; xoff < 1; xoff++)
+            {
+                for (int zoff = -1; zoff < 1; zoff++)
+                {
+                    if (xoff == 0 && zoff == 0) continue;
+                    if (!MapService.IsBlockedPosition(x + xoff, z + zoff)) return true;
+                }
+            }
             return false;
         }
     }

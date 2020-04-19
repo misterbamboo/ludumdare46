@@ -8,7 +8,9 @@ namespace Assets.Core.Entities
 {
     public enum GameActionTypes
     {
+        Cancel,
         ContinueRoad,
         MoveThere,
+        MineRock,
     }
 }

@@ -38,7 +38,7 @@ namespace Assets.Core.Services
                 CubeTypes type = MapService.GetCubeType(x, z);
                 var actions = ActionService.GetActionsForCube(type, x, z);
 
-                if (actions.Any())
+                if (actions.Where(a => a.ActionType != GameActionTypes.Cancel).Any())
                 {
                     HudService.UpdateMenuActions(actions);
                     HudService.OpenMenu();
