@@ -9,5 +9,6 @@ namespace Assets.Core.Entities
     public enum GameActionTypes
     {
         ContinueRoad,
+        MoveThere,
     }
 }

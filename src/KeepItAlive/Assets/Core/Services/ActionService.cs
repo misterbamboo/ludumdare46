@@ -54,6 +54,14 @@ namespace Assets.Core.Services
                 });
             }
 
+            actions.Add(new GameAction() 
+            {
+                Text = "Move there",
+                ActionType = GameActionTypes.MoveThere,
+                X = x,
+                Z = z,
+            });
+
             return actions;
         }
 

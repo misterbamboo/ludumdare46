@@ -50,5 +50,30 @@ namespace Assets.Core.Services
         {
             return Map.GetToonAt(x, z);
         }
+
+        public bool IsBlockedPosition(int x, int z)
+        {
+            if (HasToonAt(x, z))
+            {
+                return true;
+            }
+
+            var cube = GetCubeType(x, z);
+            switch (cube)
+            {
+                case CubeTypes.Grass:
+                case CubeTypes.Ground:
+                case CubeTypes.Wheat:
+                case CubeTypes.Road:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+
+        public int GetTotalBocks()
+        {
+            return Map.Width * Map.Depth;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Assets.Core.DI;
 using Assets.Core.Entities;
 using Assets.Core.Interfaces;
+using Assets.Core.PathFinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,11 @@ namespace Assets.Core.Services
 
         public void SelectPosition(int x, int z)
         {
-            SelectedToon = null;
             if (MapService.HasToonAt(x, z))
             {
                 SelectedToon = MapService.GetToonAt(x, z);
             }
-            else if(SelectedToon != null)
+            else if (SelectedToon != null)
             {
                 CubeTypes type = MapService.GetCubeType(x, z);
                 var actions = ActionService.GetActionsForCube(type, x, z);
@@ -48,10 +48,20 @@ namespace Assets.Core.Services
                 case GameActionTypes.ContinueRoad:
                     ContinueRoad(action);
                     break;
+                case GameActionTypes.MoveThere:
+                    ScheduleMovementForToon(SelectedToon, action);
+                    break;
                 default:
                     break;
             }
             HudService.CloseHud();
+        }
+
+        private void ScheduleMovementForToon(ToonScript toon, GameAction action)
+        {
+            var pathFinding = new AstarPathFinding();
+            IEnumerable<MovingStep> movingSteps = pathFinding.FromTo((int)toon.transform.position.x, (int)toon.transform.position.z, action.X, action.Z);
+            toon.ScheduleMovingSteps(movingSteps);
         }
 
         private void ContinueRoad(GameAction action)
