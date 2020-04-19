@@ -85,5 +85,10 @@ namespace Assets.Core.Services
         {
             Map.RemoveRessource(x, z);
         }
+
+        public Vector3 GetMapEndPoint()
+        {
+            return Map.EndPoint;
+        }
     }
 }

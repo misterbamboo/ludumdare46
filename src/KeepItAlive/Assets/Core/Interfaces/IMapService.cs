@@ -18,5 +18,6 @@ namespace Assets.Core.Interfaces
         int GetTotalBocks();
         int GetRessourceCount(int x, int z);
         void RemoveRessource(int x, int z);
+        Vector3 GetMapEndPoint();
     }
 }

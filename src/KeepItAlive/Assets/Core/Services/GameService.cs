@@ -52,7 +52,7 @@ namespace Assets.Core.Services
             switch (action.ActionType)
             {
                 case GameActionTypes.ContinueRoad:
-                    ContinueRoad(action);
+                    ContinueRoad(SelectedToon, action);
                     break;
                 case GameActionTypes.MoveThere:
                     ScheduleMovementForToon(SelectedToon, action);
@@ -113,8 +113,8 @@ namespace Assets.Core.Services
             if (allPaths.Any())
             {
                 var shortestPath = allPaths.OrderBy(p => p.Count()).First();
-                toon.SetLifeGoal(ToonLifeGoals.MineRock, action.X, action.Z);
                 toon.ScheduleMovingSteps(shortestPath);
+                toon.SetLifeGoal(ToonLifeGoals.MineRock, action.X, action.Z);
             }
             else
             {
@@ -122,9 +122,16 @@ namespace Assets.Core.Services
             }
         }
 
-        private void ContinueRoad(GameAction action)
+        private void ContinueRoad(ToonScript toon, GameAction action)
         {
-            MapService.ConvertGrassToRoad(action.X, action.Z);
+            var pathFinding = new AstarPathFinding();
+            int startX = (int)toon.transform.position.x;
+            int startZ = (int)toon.transform.position.z;
+
+            var path = pathFinding.FromTo(startX, startZ, action.X, action.Z);
+
+            toon.ScheduleMovingSteps(path);
+            toon.SetLifeGoal(ToonLifeGoals.ContinueRoad, action.X, action.Z);
         }
 
         public bool IsToonSelected(ToonScript toon)

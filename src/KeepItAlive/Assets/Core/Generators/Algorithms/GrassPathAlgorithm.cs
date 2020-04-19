@@ -48,6 +48,8 @@ namespace Assets.Core.Generators.Algorithms
                     }
                 }
             }
+
+            Map.EndPoint = new Vector3(pointerX, 0, Map.Depth - 1);
         }
 
         private class Constants

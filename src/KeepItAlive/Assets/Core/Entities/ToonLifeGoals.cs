@@ -10,5 +10,6 @@ namespace Assets.Core.Entities
     {
         Wait,
         MineRock,
+        ContinueRoad,
     }
 }

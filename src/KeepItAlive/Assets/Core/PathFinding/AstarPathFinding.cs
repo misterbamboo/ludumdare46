@@ -16,6 +16,10 @@ namespace Assets.Core.PathFinding
 
         private Dictionary<KeyValuePair<int, int>, AstarDecoratorValues> AllPossibilities { get; set; }
 
+        public CubeTypes? LimitCubeType { get; set; }
+
+        public bool NoDiagonals { get; set; }
+
         public IEnumerable<MovingStep> FromTo(int startX, int startZ, int destinationX, int destinationZ)
         {
             var blockCount = MapService.GetTotalBocks();
@@ -182,8 +186,21 @@ namespace Assets.Core.PathFinding
                         continue;
                     }
 
+                    if (NoDiagonals)
+                    {
+                        if (xOff == -1 && zOff == -1) continue;
+                        if (xOff == -1 && zOff == 1) continue;
+                        if (xOff == 1 && zOff == -1) continue;
+                        if (xOff == 1 && zOff == 1) continue;
+                    }
+
                     if (!MapService.IsBlockedPosition(lookedX, lookedZ))
                     {
+                        if (LimitCubeType.HasValue && MapService.GetCubeType(lookedX, lookedZ) != LimitCubeType.Value)
+                        {
+                            continue;
+                        }
+
                         var possibleStep = new MovingStep(lookedX, lookedZ);
                         var aStar = new AstarDecoratorValues(possibleStep, currentPosition);
                         CalculateCost(startX, startZ, destinationX, destinationZ, aStar);

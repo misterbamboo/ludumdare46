@@ -37,6 +37,8 @@ namespace Assets.Core.Entities
 
         private List<ToonScript> Toons { get; set; }
 
+        public Vector3 EndPoint { get; set; }
+
         public void FillEmptySpacesWith(CubeTypes cubeType, int minQty, int maxQty)
         {
             for (int x = 0; x < Grid.Length; x++)

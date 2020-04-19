@@ -1,6 +1,7 @@
 ﻿using Assets.Core.DI;
 using Assets.Core.Entities;
 using Assets.Core.Interfaces;
+using Assets.Core.PathFinding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,6 +37,10 @@ public class ToonScript : MonoBehaviour
 
     private float MiningRockSpeed { get; set; } = 2;
 
+    private float ContinueRoadSpeed { get; set; } = 5;
+
+    private Queue<MovingStep> RoadPath { get; set; }
+
     void Start()
     {
         ScheduledMovingSteps = new Queue<MovingStep>();
@@ -53,9 +58,13 @@ public class ToonScript : MonoBehaviour
     private void MoveBody()
     {
         var angle = transform.localEulerAngles;
-        if (CurrentMovingStep == null)
+        if (CurrentMovingStep == null && ToonLifeGoal == ToonLifeGoals.MineRock)
         {
             angle.x = Mathf.Sin(Progress) * 16 - 8;
+        }
+        else if (CurrentMovingStep == null && ToonLifeGoal == ToonLifeGoals.ContinueRoad)
+        {
+            angle.z = Mathf.Sin(Progress) * 16 - 8;
         }
         else
         {
@@ -75,8 +84,72 @@ public class ToonScript : MonoBehaviour
                 MineRock();
                 LootAtLifeGoal();
                 break;
+            case ToonLifeGoals.ContinueRoad:
+                ContinueRoad();
+                break;
             default:
                 break;
+        }
+    }
+
+    private void ContinueRoad()
+    {
+        if (RoadPath == null)
+        {
+            PlanConstruction();
+        }
+        else
+        {
+            BuildRoad();
+        }
+    }
+
+    private void PlanConstruction()
+    {
+        var endPoint = MapService.GetMapEndPoint();
+        var pathFinding = new AstarPathFinding();
+        pathFinding.LimitCubeType = CubeTypes.Grass;
+        pathFinding.NoDiagonals = true;
+
+        var paths = pathFinding.FromTo(LifeGoalTargetX, LifeGoalTargetZ, (int)endPoint.x, (int)endPoint.z);
+        var steps = new Queue<MovingStep>();
+        foreach (var path in paths)
+        {
+            steps.Enqueue(path);
+        }
+        RoadPath = steps;
+    }
+
+    private void BuildRoad()
+    {
+        var cubeType = MapService.GetCubeType(LifeGoalTargetX, LifeGoalTargetZ);
+        if (cubeType == CubeTypes.Grass)
+        {
+            if (GameService.RockCount > 0)
+            {
+                Progress += Time.deltaTime * ContinueRoadSpeed;
+                if (Progress > Mathf.PI * 2f)
+                {
+                    GameService.RockCount--;
+                    MapService.ConvertGrassToRoad(LifeGoalTargetX, LifeGoalTargetZ);
+                }
+
+                if (Progress >= Mathf.PI * 2f)
+                {
+                    Progress -= Mathf.PI * 2f;
+                }
+            }
+            else
+            {
+                Progress = 0;
+            }
+        }
+        else if (cubeType == CubeTypes.Road)
+        {
+            var next = RoadPath.Dequeue();
+            LifeGoalTargetX = next.X;
+            LifeGoalTargetZ = next.Z;
+            ScheduleMovingSteps(new[] { next });
         }
     }
 
