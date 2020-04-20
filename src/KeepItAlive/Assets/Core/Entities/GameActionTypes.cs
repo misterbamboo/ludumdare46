@@ -12,5 +12,6 @@ namespace Assets.Core.Entities
         ContinueRoad,
         MoveThere,
         MineRock,
+        PullKing,
     }
 }

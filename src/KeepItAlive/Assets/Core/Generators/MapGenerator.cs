@@ -110,6 +110,8 @@ public class MapGenerator : MonoBehaviour
             var villagerToon = villager.GetComponent<ToonScript>();
             map.AddToon(villagerToon);
         }
+
+        map.SetKing(king);
     }
 
     private void FillMapEmptySpots(CubeTypes cubeType, int minQty, int maxQty)

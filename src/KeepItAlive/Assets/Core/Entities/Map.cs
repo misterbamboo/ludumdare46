@@ -10,7 +10,12 @@ namespace Assets.Core.Entities
     public class Map
     {
         public int Width { get; private set; }
+
         public int Depth { get; private set; }
+
+        public GameObject King { get; private set; }
+
+        public Vector3 EndPoint { get; set; }
 
         public Map(int width, int depth)
         {
@@ -36,8 +41,6 @@ namespace Assets.Core.Entities
         private GameObject[][] GameObjectsGrid { get; set; }
 
         private List<ToonScript> Toons { get; set; }
-
-        public Vector3 EndPoint { get; set; }
 
         public void FillEmptySpacesWith(CubeTypes cubeType, int minQty, int maxQty)
         {
@@ -112,6 +115,11 @@ namespace Assets.Core.Entities
 
             GameObjectsGrid[x][z] = gameObject;
             UpdateGameObjectAt(x, z);
+        }
+
+        public void SetKing(GameObject king)
+        {
+            King = king;
         }
 
         private void UpdateGameObjectAt(int x, int z)

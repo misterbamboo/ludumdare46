@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.Core.Services
 {
@@ -33,10 +34,35 @@ namespace Assets.Core.Services
                     break;
                 case CubeTypes.Water:
                     break;
+                case CubeTypes.Road:
+                    return GetRoadActions(x, z);
                 default:
                     break;
             }
             return Enumerable.Empty<GameAction>();
+        }
+
+        private IEnumerable<GameAction> GetRoadActions(int x, int z)
+        {
+            List<GameAction> actions = new List<GameAction>();
+
+            Vector3 kingPosition = MapService.GetKingPosition();
+            var kingX = (int)kingPosition.x;
+            var kingZ = (int)kingPosition.z;
+
+            if (kingX == x && kingZ == z)
+            {
+                actions.Add(new GameAction()
+                {
+                    Text = "Pull king",
+                    ActionType = GameActionTypes.PullKing,
+                    X = x,
+                    Z = z,
+                });
+                AddCancelAction(actions);
+            }
+
+            return actions;
         }
 
         private IEnumerable<GameAction> GetRockActions(int x, int z)
@@ -52,9 +78,9 @@ namespace Assets.Core.Services
                     X = x,
                     Z = z,
                 });
+                AddCancelAction(actions);
             }
 
-            AddCancelAction(actions);
             return actions;
         }
 

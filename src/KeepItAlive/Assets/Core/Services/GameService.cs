@@ -60,6 +60,9 @@ namespace Assets.Core.Services
                 case GameActionTypes.MineRock:
                     ScheduleMovementForNeerRockPosition(SelectedToon, action);
                     break;
+                case GameActionTypes.PullKing:
+                    ScheduleMovementToPullKing(SelectedToon, action);
+                    break;
                 default:
                     break;
             }
@@ -71,6 +74,48 @@ namespace Assets.Core.Services
             var pathFinding = new AstarPathFinding();
             IEnumerable<MovingStep> movingSteps = pathFinding.FromTo((int)toon.transform.position.x, (int)toon.transform.position.z, action.X, action.Z);
             toon.ScheduleMovingSteps(movingSteps);
+        }
+
+        private void ScheduleMovementToPullKing(ToonScript toon, GameAction action)
+        {
+            var kingPos = MapService.GetKingPosition();
+            var kingX = (int)kingPos.x;
+            var kingZ = (int)kingPos.z;
+
+            bool bestFound = false;
+            int bestX = kingX;
+            int bestZ = kingZ;
+            for (int xoff = -1; xoff <= 1; xoff++)
+            {
+                if (xoff == 0) continue;
+                if (!MapService.IsBlockedPosition(kingX + xoff, kingZ))
+                {
+                    bestX = kingX + xoff;
+                    bestZ = kingZ;
+                    bestFound = true;
+                }
+            }
+
+            for (int zoff = -1; zoff <= 1; zoff++)
+            {
+                if (zoff == 0) continue;
+                if (!MapService.IsBlockedPosition(kingX, kingZ + zoff))
+                {
+                    bestX = kingX;
+                    bestZ = kingZ + zoff;
+                    bestFound = true;
+                }
+            }
+
+            if (!bestFound) return;
+
+            var pathFinding = new AstarPathFinding();
+            int startX = (int)toon.transform.position.x;
+            int startZ = (int)toon.transform.position.z;
+
+            IEnumerable<MovingStep> movingSteps = pathFinding.FromTo(startX, startZ, bestX, bestZ);
+            toon.ScheduleMovingSteps(movingSteps);
+            toon.SetLifeGoal(ToonLifeGoals.PullKing, action.X, action.Z);
         }
 
         private void ScheduleMovementForNeerRockPosition(ToonScript toon, GameAction action)

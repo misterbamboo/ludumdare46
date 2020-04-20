@@ -19,5 +19,7 @@ namespace Assets.Core.Interfaces
         int GetRessourceCount(int x, int z);
         void RemoveRessource(int x, int z);
         Vector3 GetMapEndPoint();
+        Vector3 GetKingPosition();
+        void SetKingPosition(Vector3 vector3);
     }
 }

@@ -65,28 +65,6 @@ namespace Assets.Core.PathFinding
             return stepsToDestination.ToList();
         }
 
-        private AstarDecoratorValues GetBestPossibility(AstarDecoratorValues currentPath)
-        {
-            AstarDecoratorValues actualBest = null;
-            for (int x = -1; x <= 1; x++)
-            {
-                for (int z = -1; z <= 1; z++)
-                {
-                    if (x == 0 && z == 0) continue;
-                    var possibility = GetPossibilityAt(currentPath.PossibleStep.X + x, currentPath.PossibleStep.Z + z);
-                    if (possibility == null) continue;
-
-                    if (possibility.GCost == 0) return possibility;
-
-                    if (actualBest == null || possibility.FCost < actualBest.FCost)
-                    {
-                        actualBest = possibility;
-                    }
-                }
-            }
-            return actualBest;
-        }
-
         private AstarDecoratorValues GetPossibilityAt(int x, int z)
         {
             KeyValuePair<int, int> key = new KeyValuePair<int, int>(x, z);

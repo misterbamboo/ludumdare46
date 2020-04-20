@@ -5,6 +5,7 @@ using Assets.Core.PathFinding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ToonScript : MonoBehaviour
@@ -39,7 +40,15 @@ public class ToonScript : MonoBehaviour
 
     private float ContinueRoadSpeed { get; set; } = 5;
 
+    private float PullKingSpeed { get; set; } = 0.1f;
+
     private Queue<MovingStep> RoadPath { get; set; }
+
+    private List<MovingStep> KingPath { get; set; }
+
+    private MovingStep CurrentKingPath { get; set; }
+
+    private float? PullKingPreviousZ { get; set; }
 
     void Start()
     {
@@ -66,6 +75,18 @@ public class ToonScript : MonoBehaviour
         {
             angle.z = Mathf.Sin(Progress) * 16 - 8;
         }
+        else if (CurrentMovingStep == null && ToonLifeGoal == ToonLifeGoals.PullKing)
+        {
+            var pos = transform.localPosition;
+            if (!PullKingPreviousZ.HasValue)
+            {
+                PullKingPreviousZ = pos.z;
+            }
+
+            angle.x = Mathf.Sin(Progress) * 90 - 20;
+            pos.z = Progress * 1.5f + PullKingPreviousZ.Value - 0.4f;
+            transform.localPosition = pos;
+        }
         else
         {
             angle.x = 0;
@@ -87,8 +108,80 @@ public class ToonScript : MonoBehaviour
             case ToonLifeGoals.ContinueRoad:
                 ContinueRoad();
                 break;
+            case ToonLifeGoals.PullKing:
+                PullKing();
+                LootAtLifeGoal();
+                break;
             default:
                 break;
+        }
+    }
+
+    private void PullKing()
+    {
+        var kingPos = MapService.GetKingPosition();
+        var kingX = (int)kingPos.x;
+        var kingZ = (int)kingPos.z;
+
+        if (KingPath == null)
+        {
+            var roadPathFinding = new RoadPathFinding();
+            KingPath = new List<MovingStep>(roadPathFinding.FromTo(kingX, kingZ));
+        }
+
+        if (CurrentKingPath == null)
+        {
+            var step = KingPath.Where(s => s.X == kingX && s.Z == kingZ).FirstOrDefault();
+            if (step == null)
+            {
+                CurrentKingPath = KingPath.FirstOrDefault();
+            }
+            else
+            {
+                CurrentKingPath = step;
+            }
+        }
+
+        // still null nothing todo
+        if (CurrentKingPath == null)
+        {
+            KingPath = null;
+            return;
+        }
+
+        Progress += Time.deltaTime * PullKingSpeed;
+
+        Vector3 start = new Vector3(kingX, kingPos.y, kingZ);
+        Vector3 end = new Vector3(CurrentKingPath.X, kingPos.y, CurrentKingPath.Z);
+
+        MapService.SetKingPosition(Vector3.Lerp(start, end, Progress));
+
+        if (Progress >= 1)
+        {
+            Progress = 0;
+
+            if (PullKingPreviousZ.HasValue)
+            {
+                var pos = transform.localPosition;
+                pos.y = PullKingPreviousZ.Value;
+                transform.localPosition = pos;
+                CurrentKingPath = null;
+
+                kingPos = MapService.GetKingPosition();
+                kingX = (int)kingPos.x;
+                kingZ = (int)kingPos.z;
+
+                var kingStep = KingPath.Where(s => s.X == kingX && s.Z == kingZ).FirstOrDefault();
+                if (kingStep != null)
+                {
+                    var kingStepIndex = KingPath.IndexOf(kingStep);
+                    kingStepIndex++;
+                    if(kingStepIndex < KingPath.Count)
+                    {
+                        CurrentMovingStep = KingPath[kingStepIndex];
+                    }
+                }
+            }
         }
     }
 
@@ -229,5 +322,11 @@ public class ToonScript : MonoBehaviour
         ToonLifeGoal = lifeGoal;
         LifeGoalTargetX = x;
         LifeGoalTargetZ = z;
+
+        if (ToonLifeGoal != ToonLifeGoals.PullKing)
+        {
+            KingPath = null;
+            CurrentKingPath = null;
+        }
     }
 }

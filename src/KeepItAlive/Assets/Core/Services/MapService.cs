@@ -53,6 +53,11 @@ namespace Assets.Core.Services
 
         public bool IsBlockedPosition(int x, int z)
         {
+            var kingX = (int)Map.King.transform.position.x;
+            var kingZ = (int)Map.King.transform.position.z;
+
+            if (kingX == x && kingZ == z) return true;
+
             if (HasToonAt(x, z))
             {
                 return true;
@@ -89,6 +94,16 @@ namespace Assets.Core.Services
         public Vector3 GetMapEndPoint()
         {
             return Map.EndPoint;
+        }
+
+        public Vector3 GetKingPosition()
+        {
+            return new Vector3(Map.King.transform.position.x, Map.King.transform.position.y, Map.King.transform.position.z);
+        }
+
+        public void SetKingPosition(Vector3 vector3)
+        {
+            Map.King.transform.position = vector3;
         }
     }
 }
